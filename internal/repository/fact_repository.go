@@ -13,11 +13,15 @@ func NewFactRepository() *factRepository {
 	return &factRepository{}
 }
 
-func (*factRepository) Find() []*dto.FactOutput {
+func (*factRepository) Find() ([]*dto.FactOutput, error) {
 	facts := []model.Fact{}
 	factsOutput := []*dto.FactOutput{}
 
-	database.DB.Find(&facts)
+	err := database.DB.Find(&facts).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	for _, fact := range facts {
 		factsOutput = append(factsOutput, &dto.FactOutput{
@@ -29,16 +33,20 @@ func (*factRepository) Find() []*dto.FactOutput {
 		})
 	}
 
-	return factsOutput
+	return factsOutput, nil
 }
 
-func (*factRepository) Create(input *dto.FactInput) *dto.FactOutput {
+func (*factRepository) Create(input *dto.FactInput) (*dto.FactOutput, error) {
 	fact := model.Fact{
 		Question: input.Question,
 		Answer:   input.Answer,
 	}
 
-	database.DB.Create(&fact)
+	err := database.DB.Create(&fact).Error
+
+	if err != nil {
+		return nil, err
+	}
 
 	return &dto.FactOutput{
 		ID:        fact.ID,
@@ -46,5 +54,5 @@ func (*factRepository) Create(input *dto.FactInput) *dto.FactOutput {
 		Answer:    fact.Answer,
 		CreatedAt: fact.CreatedAt,
 		UpdatedAt: fact.UpdatedAt,
-	}
+	}, nil
 }

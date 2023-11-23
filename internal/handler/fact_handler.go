@@ -15,7 +15,13 @@ func NewFactHandler(repo interfaces.FactRepoInterface) *factHandler {
 }
 
 func (f *factHandler) ListFacts(c *fiber.Ctx) error {
-	facts := f.factRepository.Find()
+	facts, err := f.factRepository.Find()
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
 
 	return c.Status(fiber.StatusFound).JSON(facts)
 }
@@ -25,11 +31,17 @@ func (f *factHandler) CreateFact(c *fiber.Ctx) error {
 
 	if err := c.BodyParser(&factInput); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": err.Error(),
+			"error": err.Error(),
 		})
 	}
 
-	fact := f.factRepository.Create(&factInput)
+	fact, err := f.factRepository.Create(&factInput)
+
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": err.Error(),
+		})
+	}
 
 	return c.Status(fiber.StatusCreated).JSON(fact)
 }

@@ -5,6 +5,6 @@ import (
 )
 
 type FactRepoInterface interface {
-	Find() []*dto.FactOutput
-	Create(fact *dto.FactInput) *dto.FactOutput
+	Find() ([]*dto.FactOutput, error)
+	Create(fact *dto.FactInput) (*dto.FactOutput, error)
 }
