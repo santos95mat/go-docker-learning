@@ -9,7 +9,7 @@ import (
 func ListFacts(c *fiber.Ctx) error {
 	facts := []models.Fact{}
 
-	database.DB.DB.Find(&facts)
+	database.DB.Find(&facts)
 
 	return c.Status(fiber.StatusFound).JSON(facts)
 }
@@ -23,7 +23,7 @@ func CreateFact(c *fiber.Ctx) error {
 		})
 	}
 
-	database.DB.DB.Create(&fact)
+	database.DB.Create(&fact)
 
 	return c.Status(fiber.StatusCreated).JSON(fact)
 }
