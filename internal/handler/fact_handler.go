@@ -45,7 +45,7 @@ func (f *factHandler) ListFacts(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusFound).JSON(facts)
+	return c.Status(fiber.StatusOK).JSON(facts)
 }
 
 func (f *factHandler) ListFact(c *fiber.Ctx) error {
@@ -65,5 +65,5 @@ func (f *factHandler) ListFact(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.Status(fiber.StatusFound).JSON(fact)
+	return c.Status(fiber.StatusOK).JSON(fact)
 }

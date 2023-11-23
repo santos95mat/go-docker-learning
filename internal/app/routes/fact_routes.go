@@ -1,4 +1,4 @@
-package main
+package routes
 
 import (
 	"github.com/gofiber/fiber/v2"
@@ -11,8 +11,10 @@ var (
 	factHandler    = handler.NewFactHandler(factRepository)
 )
 
-func setupRoutes(app *fiber.App) {
-	app.Post("/fact", factHandler.CreateFact)
-	app.Get("/fact", factHandler.ListFacts)
-	app.Get("/fact/:id", factHandler.ListFact)
+func FactRoutes(app *fiber.App) {
+	fact := app.Group("/fact")
+
+	fact.Post("/", factHandler.CreateFact)
+	fact.Get("/", factHandler.ListFacts)
+	fact.Get("/:id", factHandler.ListFact)
 }
