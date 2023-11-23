@@ -3,11 +3,11 @@ package handler
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/santos95mat/go-docker-learning/internal/database"
-	"github.com/santos95mat/go-docker-learning/internal/models"
+	"github.com/santos95mat/go-docker-learning/internal/model"
 )
 
 func ListFacts(c *fiber.Ctx) error {
-	facts := []models.Fact{}
+	facts := []model.Fact{}
 
 	database.DB.Find(&facts)
 
@@ -15,7 +15,7 @@ func ListFacts(c *fiber.Ctx) error {
 }
 
 func CreateFact(c *fiber.Ctx) error {
-	fact := models.Fact{}
+	fact := model.Fact{}
 
 	if err := c.BodyParser(fact); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
