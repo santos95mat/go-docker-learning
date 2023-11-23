@@ -7,10 +7,10 @@ import (
 )
 
 type factHandler struct {
-	factRepository interfaces.FactRepository
+	factRepository interfaces.FactRepoInterface
 }
 
-func NewFactHandler(repo interfaces.FactRepository) *factHandler {
+func NewFactHandler(repo interfaces.FactRepoInterface) *factHandler {
 	return &factHandler{factRepository: repo}
 }
 
@@ -21,15 +21,15 @@ func (f *factHandler) ListFacts(c *fiber.Ctx) error {
 }
 
 func (f *factHandler) CreateFact(c *fiber.Ctx) error {
-	fact := dto.FactInput{}
+	factInput := dto.FactInput{}
 
-	if err := c.BodyParser(&fact); err != nil {
+	if err := c.BodyParser(&factInput); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	factOutput := f.factRepository.Create(&fact)
+	fact := f.factRepository.Create(&factInput)
 
-	return c.Status(fiber.StatusCreated).JSON(factOutput)
+	return c.Status(fiber.StatusCreated).JSON(fact)
 }
