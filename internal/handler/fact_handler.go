@@ -2,28 +2,34 @@ package handler
 
 import (
 	"github.com/gofiber/fiber/v2"
-	"github.com/santos95mat/go-docker-learning/internal/database"
-	"github.com/santos95mat/go-docker-learning/internal/model"
+	"github.com/santos95mat/go-docker-learning/internal/dto"
+	"github.com/santos95mat/go-docker-learning/internal/interfaces"
 )
 
-func ListFacts(c *fiber.Ctx) error {
-	facts := []model.Fact{}
+type factHandler struct {
+	factRepository interfaces.FactRepository
+}
 
-	database.DB.Find(&facts)
+func NewFactHandler(repo interfaces.FactRepository) *factHandler {
+	return &factHandler{factRepository: repo}
+}
+
+func (f *factHandler) ListFacts(c *fiber.Ctx) error {
+	facts := f.factRepository.Find()
 
 	return c.Status(fiber.StatusFound).JSON(facts)
 }
 
-func CreateFact(c *fiber.Ctx) error {
-	fact := model.Fact{}
+func (f *factHandler) CreateFact(c *fiber.Ctx) error {
+	fact := dto.FactInput{}
 
-	if err := c.BodyParser(fact); err != nil {
+	if err := c.BodyParser(&fact); err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"message": err.Error(),
 		})
 	}
 
-	database.DB.Create(&fact)
+	factOutput := f.factRepository.Create(&fact)
 
-	return c.Status(fiber.StatusCreated).JSON(fact)
+	return c.Status(fiber.StatusCreated).JSON(factOutput)
 }
