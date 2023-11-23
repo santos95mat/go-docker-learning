@@ -12,6 +12,7 @@ var (
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/fact", factHandler.ListFacts)
 	app.Post("/fact", factHandler.CreateFact)
+	app.Get("/fact", factHandler.ListFacts)
+	app.Get("/fact/:id", factHandler.ListFact)
 }
